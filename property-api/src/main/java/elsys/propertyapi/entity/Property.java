@@ -36,4 +36,8 @@ public class Property {
 
     @OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Room> rooms;
+
+    public void addImage(String imageUrl) {
+        images.add(imageUrl);
+    }
 }

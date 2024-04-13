@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 @RestController
 @RequestMapping("/api/v1/properties")
 @RequiredArgsConstructor
@@ -20,7 +23,7 @@ public class PropertyController {
     public ResponseEntity<Property> addProperty(
         @RequestPart("data") @Valid AddPropertyRequest propertyData,
         @RequestPart("images") MultipartFile[] images
-    ) {
+    ) throws IOException, ExecutionException, InterruptedException {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.addProperty(propertyData, images));
     }
 }
