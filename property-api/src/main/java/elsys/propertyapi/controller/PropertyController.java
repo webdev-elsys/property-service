@@ -26,4 +26,14 @@ public class PropertyController {
     ) throws IOException, ExecutionException, InterruptedException {
         return ResponseEntity.status(HttpStatus.CREATED).body(propertyService.addProperty(propertyData, images));
     }
+
+    // UPDATE: added the following method
+
+    // DELETE: removed the following method
+
+    // ADD ROOM: added the following method
+
+    // DELETE ROOM: added the following method
+
+    // UPDATE ROOM: added the following method
 }
