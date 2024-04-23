@@ -14,4 +14,5 @@ public interface PropertyService {
     Property addProperty(AddPropertyRequest propertyData, MultipartFile[] images) throws IOException, ExecutionException, InterruptedException;
     List<Room> getAvailableRooms(String propertyUuid, LocalDate checkInDate, LocalDate checkOutDate, int numberOfGuests);
     Float getRoomPrice(String propertyUuid, String roomUuid);
+    List<Property> getOwnerProperties(String ownerUuid);
 }

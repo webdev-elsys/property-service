@@ -75,4 +75,9 @@ public class PropertyServiceImpl implements PropertyService {
     public Float getRoomPrice(String propertyUuid, String roomUuid) {
         return roomRepository.findByPropertyUuidAndUuid(propertyUuid, roomUuid).getPricePerNight();
     }
+
+    @Override
+    public List<Property> getOwnerProperties(String ownerUuid) {
+        return propertyRepository.getAllByOwnerUuid(ownerUuid);
+    }
 }
