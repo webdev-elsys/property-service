@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, String> {
-
+    List<Property> getAllByOwnerUuid(String ownerUuid);
 }

@@ -6,8 +6,8 @@ import elsys.propertyapi.entity.Room;
 import elsys.propertyapi.repository.PropertyRepository;
 import elsys.propertyapi.repository.RoomRepository;
 import elsys.propertyapi.service.AzureBlobService;
+import elsys.propertyapi.service.BookingApiService;
 import elsys.propertyapi.service.PropertyService;
-import elsys.propertyapi.api.booking_api.BookingApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +46,7 @@ public class PropertyServiceImpl implements PropertyService {
             }
         });
 
-        List<Room> rooms = roomMapper.fromAddRoomRequestList(propertyData.getRooms());
+        List<Room> rooms = roomMapper.fromAddRoomRequestList(propertyData.rooms());
         rooms.forEach(room -> room.setProperty(property));
         property.setRooms(rooms);
 
@@ -74,5 +74,10 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public Float getRoomPrice(String propertyUuid, String roomUuid) {
         return roomRepository.findByPropertyUuidAndUuid(propertyUuid, roomUuid).getPricePerNight();
+    }
+
+    @Override
+    public List<Property> getOwnerProperties(String ownerUuid) {
+        return propertyRepository.getAllByOwnerUuid(ownerUuid);
     }
 }

@@ -1,5 +1,7 @@
-package elsys.propertyapi.api.booking_api;
+package elsys.propertyapi.service.Impl;
 
+import elsys.propertyapi.api.booking_api.BookingApiEndpoints;
+import elsys.propertyapi.service.BookingApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -8,11 +10,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class BookingApiService {
+public class BookingApiServiceImpl implements BookingApiService {
     private final WebClient webClient;
 
     @Autowired
-    public BookingApiService(WebClient.Builder webClientBuilder) {
+    public BookingApiServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.build();
     }
 
