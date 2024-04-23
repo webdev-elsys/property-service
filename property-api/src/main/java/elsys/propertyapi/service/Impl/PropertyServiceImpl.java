@@ -2,14 +2,18 @@ package elsys.propertyapi.service.Impl;
 
 import elsys.propertyapi.dto.AddPropertyRequest;
 import elsys.propertyapi.entity.Property;
+import elsys.propertyapi.entity.Room;
 import elsys.propertyapi.repository.PropertyRepository;
+import elsys.propertyapi.repository.RoomRepository;
 import elsys.propertyapi.service.AzureBlobService;
 import elsys.propertyapi.service.PropertyService;
+import elsys.propertyapi.api.booking_api.BookingApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -22,7 +26,9 @@ import static elsys.propertyapi.mapper.RoomMapper.roomMapper;
 @RequiredArgsConstructor
 public class PropertyServiceImpl implements PropertyService {
     private final PropertyRepository propertyRepository;
+    private final RoomRepository roomRepository;
     private final AzureBlobService azureBlobService;
+    private final BookingApiService bookingApiService;
 
     // TODO: this should be checked if indeed is async
     @Override
@@ -40,8 +46,33 @@ public class PropertyServiceImpl implements PropertyService {
             }
         });
 
-        property.setRooms(roomMapper.fromAddRoomRequestList(propertyData.getRooms()));
+        List<Room> rooms = roomMapper.fromAddRoomRequestList(propertyData.getRooms());
+        rooms.forEach(room -> room.setProperty(property));
+        property.setRooms(rooms);
 
         return propertyRepository.save(property);
+    }
+
+    @Override
+    public List<Room> getAvailableRooms(String propertyUuid, LocalDate checkInDate, LocalDate checkOutDate, int guests) {
+        List<Room> rooms = roomRepository.getAllByPropertyUuidAndGuests(propertyUuid, guests);
+
+        if (rooms.isEmpty()) {
+            return rooms;
+        }
+
+        List<String> nonAvailableRooms = bookingApiService.getBookedRooms(propertyUuid, checkInDate, checkOutDate);
+
+
+        nonAvailableRooms.forEach(System.out::println);
+
+        rooms.removeIf(room -> nonAvailableRooms.contains(room.getUuid()));
+
+        return rooms;
+    }
+
+    @Override
+    public Float getRoomPrice(String propertyUuid, String roomUuid) {
+        return roomRepository.findByPropertyUuidAndUuid(propertyUuid, roomUuid).getPricePerNight();
     }
 }

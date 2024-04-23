@@ -14,14 +14,14 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String uuid;
 
-    @Column(nullable = false)
+    @Column
     private String type;
 
     @Column(nullable = false)
     private int guests;
 
     @Column(nullable = false, columnDefinition = "DECIMAL(10, 2)")
-    private float price;
+    private float pricePerNight;
 
     @Column(nullable = false)
     private int area;
@@ -34,6 +34,6 @@ public class Room {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "property_id", referencedColumnName = "uuid")
+    @JoinColumn(name = "property_uuid", referencedColumnName = "uuid")
     private Property property;
 }
