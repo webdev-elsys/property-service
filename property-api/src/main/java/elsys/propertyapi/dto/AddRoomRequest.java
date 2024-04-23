@@ -19,7 +19,7 @@ public class AddRoomRequest {
 
     @NotNull
     @PositiveOrZero
-    private final float price;
+    private final float pricePerNight;
 
     @NotNull
     @Positive
