@@ -8,23 +8,10 @@ import lombok.Data;
 
 import java.util.List;
 
-@Data
-public class AddRoomRequest {
-    @NotNull
-    private final String type;
-
-    @NotNull
-    @Positive
-    private final int guests;
-
-    @NotNull
-    @PositiveOrZero
-    private final float pricePerNight;
-
-    @NotNull
-    @Positive
-    private final int area;
-
-    @NotNull
-    private final List<RoomFacility> facilities;
-}
+public record AddRoomRequest(
+    @NotNull String type,
+    @NotNull @Positive int guests,
+    @NotNull @PositiveOrZero float pricePerNight,
+    @NotNull @Positive int area,
+    @NotNull List<RoomFacility> facilities
+) { }

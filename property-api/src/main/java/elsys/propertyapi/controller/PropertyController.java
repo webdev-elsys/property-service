@@ -51,8 +51,8 @@ public class PropertyController {
         return ResponseEntity.ok(propertyService.getRoomPrice(propertyUuid, roomUuid));
     }
 
-    @GetMapping("/owner/{ownerUuid}")
-    public ResponseEntity<List<Property>> getOwnerProperties(@PathVariable @UUID String ownerUuid) {
+    @GetMapping()
+    public ResponseEntity<List<Property>> getOwnerProperties(@RequestParam("ownerUuid") @UUID String ownerUuid) {
         return ResponseEntity.ok(propertyService.getOwnerProperties(ownerUuid));
     }
 

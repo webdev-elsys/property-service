@@ -8,20 +8,10 @@ import org.hibernate.validator.constraints.UUID;
 
 import java.util.List;
 
-@Data
-public class AddPropertyRequest {
-    @NotNull
-    @UUID
-    private final String ownerUuid;
-
-    @NotNull
-    @NotEmpty
-    private final String title;
-
-    @NotNull
-    @NotEmpty
-    private final String description;
-
-    private final List<PropertyFacility> facilities;
-    private final List<AddRoomRequest> rooms;
-}
+public record AddPropertyRequest(
+    @NotNull @UUID String ownerUuid,
+    @NotNull @NotEmpty String title,
+    @NotNull @NotEmpty String description,
+    List<PropertyFacility> facilities,
+    List<AddRoomRequest> rooms
+) { }
