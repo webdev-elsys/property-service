@@ -1,6 +1,7 @@
 package elsys.propertyapi.service.Impl;
 
 import elsys.propertyapi.dto.AddPropertyRequest;
+import elsys.propertyapi.dto.AddRoomRequest;
 import elsys.propertyapi.entity.Location;
 import elsys.propertyapi.entity.Property;
 import elsys.propertyapi.entity.Room;
@@ -93,5 +94,61 @@ public class PropertyServiceImpl implements PropertyService {
         } else {
             return propertyRepository.getAllByLocationCityAndLocationCountry(city, country, pageable);
         }
+    }
+
+    @Override
+    public Property addRoomToProperty(String propertyUuid, AddRoomRequest addRoomRequest) {
+        Property property = propertyRepository.findById(propertyUuid).orElseThrow();
+
+        Room room = roomMapper.fromAddRoomRequest(addRoomRequest);
+        room.setProperty(property);
+        property.getRooms().add(room);
+
+        return propertyRepository.save(property);
+    }
+
+    @Override
+    public Room updatePropertyRoom(String propertyUuid, String roomUuid, AddRoomRequest addRoomRequest) {
+        Property property = propertyRepository.findById(propertyUuid).orElseThrow();
+        Room room = roomMapper.fromAddRoomRequest(addRoomRequest);
+
+        property.getRooms().removeIf(r -> r.getUuid().equals(roomUuid));
+        property.getRooms().add(room);
+
+        propertyRepository.save(property);
+
+        return room;
+    }
+
+    @Override
+    public Property updateProperty(String propertyUuid, AddPropertyRequest addPropertyRequest) {
+        Property property = propertyRepository.findById(propertyUuid).orElseThrow();
+
+        property.setTitle(addPropertyRequest.title());
+        property.setDescription(addPropertyRequest.description());
+        property.setLocation(locationMapper.fromLocationDto(addPropertyRequest.location()));
+        property.setFacilities(addPropertyRequest.facilities());
+        property.setRooms(roomMapper.fromAddRoomRequestList(addPropertyRequest.rooms()));
+
+        return propertyRepository.save(property);
+    }
+
+    @Override
+    public void deleteProperty(String propertyUuid) {
+        Property property = propertyRepository.findById(propertyUuid).orElseThrow();
+        property.setDeleted(true);
+        propertyRepository.save(property);
+    }
+
+    @Override
+    public void deleteRoom(String propertyUuid, String roomUuid) {
+        Property property = propertyRepository.findById(propertyUuid).orElseThrow();
+        property.getRooms()
+                .stream()
+                .filter(
+                        room -> room.getUuid().equals(roomUuid)
+                ).findFirst().ifPresent(room -> room.setDeleted(true));
+
+        propertyRepository.save(property);
     }
 }

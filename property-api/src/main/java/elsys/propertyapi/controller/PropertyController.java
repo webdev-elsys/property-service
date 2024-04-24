@@ -1,6 +1,8 @@
 package elsys.propertyapi.controller;
 
+import com.azure.core.annotation.Patch;
 import elsys.propertyapi.dto.AddPropertyRequest;
+import elsys.propertyapi.dto.AddRoomRequest;
 import elsys.propertyapi.entity.Property;
 import elsys.propertyapi.entity.Room;
 import elsys.propertyapi.service.PropertyService;
@@ -71,11 +73,49 @@ public class PropertyController {
         return ResponseEntity.ok(properties);
     }
 
-    // TODO: Implement the following methods:
     // 1. Add room to property
-    // 2. Update room
-    // 3. Update property
-    // 4. Delete property - soft delete (a.k.a. isDeleted = true; do not remove from DB, just add a flag)
-    // 5. Delete room - soft delete (a.k.a. isDeleted = true; do not remove from DB, just add a flag)
+    @PatchMapping("/{propertyUuid}/rooms")
+    public ResponseEntity<Property> addRoomToProperty(
+        @PathVariable @UUID String propertyUuid,
+        @RequestBody @Valid AddRoomRequest addRoomRequest
+    ) {
+        return ResponseEntity.ok(propertyService.addRoomToProperty(propertyUuid, addRoomRequest));
+    }
 
+
+    // 2. Update room
+    @PatchMapping("/{propertyUuid}/rooms/{roomUuid}")
+    public ResponseEntity<Room> updatePropertyRoom(
+        @PathVariable @UUID String propertyUuid,
+        @PathVariable @UUID String roomUuid,
+        @RequestBody @Valid AddRoomRequest addRoomRequest
+    ) {
+        return ResponseEntity.ok(propertyService.updatePropertyRoom(propertyUuid, roomUuid, addRoomRequest));
+    }
+
+    // 3. Update property
+    @PatchMapping("/{propertyUuid}")
+    public ResponseEntity<Property> updateProperty(
+        @PathVariable @UUID String propertyUuid,
+        @RequestBody @Valid AddPropertyRequest addPropertyRequest
+    ) {
+        return ResponseEntity.ok(propertyService.updateProperty(propertyUuid, addPropertyRequest));
+    }
+
+    // 4. Delete property - soft delete (a.k.a. isDeleted = true; do not remove from DB, just add a flag)
+    @PatchMapping("delete/{propertyUuid}")
+    public ResponseEntity<Void> deleteProperty(@PathVariable @UUID String propertyUuid) {
+        propertyService.deleteProperty(propertyUuid);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 5. Delete room - soft delete (a.k.a. isDeleted = true; do not remove from DB, just add a flag)
+    @PatchMapping("delete/{propertyUuid}/rooms/{roomUuid}")
+    public ResponseEntity<Void> deleteRoom(
+        @PathVariable @UUID String propertyUuid,
+        @PathVariable @UUID String roomUuid
+    ) {
+        propertyService.deleteRoom(propertyUuid, roomUuid);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -42,6 +42,9 @@ public class Property {
     @OneToMany(mappedBy = "property", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Room> rooms;
 
+    @Column(columnDefinition = "BOOLEAN", nullable = false)
+    private boolean isDeleted = false;
+
     public void addImage(String imageUrl) {
         images.add(imageUrl);
     }
