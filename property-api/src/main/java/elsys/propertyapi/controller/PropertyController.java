@@ -9,6 +9,9 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,18 +54,28 @@ public class PropertyController {
         return ResponseEntity.ok(propertyService.getRoomPrice(propertyUuid, roomUuid));
     }
 
-    @GetMapping()
+    @GetMapping("/owner")
     public ResponseEntity<List<Property>> getOwnerProperties(@RequestParam("ownerUuid") @UUID String ownerUuid) {
         return ResponseEntity.ok(propertyService.getOwnerProperties(ownerUuid));
     }
 
-    // UPDATE: added the following method
+    @GetMapping("/location")
+    public ResponseEntity<Page<Property>> getPropertiesByCityAndCountry(
+        @RequestParam(value = "city", required = false) String city,
+        @RequestParam(value = "country") String country,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Property> properties = propertyService.getPropertiesByCityAndCountry(city, country, pageable);
+        return ResponseEntity.ok(properties);
+    }
 
-    // DELETE: removed the following method
+    // TODO: Implement the following methods:
+    // 1. Add room to property
+    // 2. Update room
+    // 3. Update property
+    // 4. Delete property - soft delete (a.k.a. isDeleted = true; do not remove from DB, just add a flag)
+    // 5. Delete room - soft delete (a.k.a. isDeleted = true; do not remove from DB, just add a flag)
 
-    // ADD ROOM: added the following method
-
-    // DELETE ROOM: added the following method
-
-    // UPDATE ROOM: added the following method
 }

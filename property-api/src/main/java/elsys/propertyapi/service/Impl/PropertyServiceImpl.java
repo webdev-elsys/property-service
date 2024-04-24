@@ -1,6 +1,7 @@
 package elsys.propertyapi.service.Impl;
 
 import elsys.propertyapi.dto.AddPropertyRequest;
+import elsys.propertyapi.entity.Location;
 import elsys.propertyapi.entity.Property;
 import elsys.propertyapi.entity.Room;
 import elsys.propertyapi.repository.PropertyRepository;
@@ -9,6 +10,8 @@ import elsys.propertyapi.service.AzureBlobService;
 import elsys.propertyapi.service.BookingApiService;
 import elsys.propertyapi.service.PropertyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 import static elsys.propertyapi.mapper.PropertyMapper.propertyMapper;
 import static elsys.propertyapi.mapper.RoomMapper.roomMapper;
+import static elsys.propertyapi.mapper.LocationMapper.locationMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,7 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public Property addProperty(AddPropertyRequest propertyData, MultipartFile[] images) throws IOException, ExecutionException, InterruptedException {
         Property property = propertyMapper.fromAddPropertyRequest(propertyData);
+        property.setImages(new ArrayList<>());
 
         List<CompletableFuture<String>> imageUploadFutures = new ArrayList<>();
         for (MultipartFile image : images) {
@@ -50,6 +55,10 @@ public class PropertyServiceImpl implements PropertyService {
         rooms.forEach(room -> room.setProperty(property));
         property.setRooms(rooms);
 
+        Location location = locationMapper.fromLocationDto(propertyData.location());
+        location.setProperty(property);
+        property.setLocation(location);
+
         return propertyRepository.save(property);
     }
 
@@ -62,10 +71,6 @@ public class PropertyServiceImpl implements PropertyService {
         }
 
         List<String> nonAvailableRooms = bookingApiService.getBookedRooms(propertyUuid, checkInDate, checkOutDate);
-
-
-        nonAvailableRooms.forEach(System.out::println);
-
         rooms.removeIf(room -> nonAvailableRooms.contains(room.getUuid()));
 
         return rooms;
@@ -79,5 +84,14 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     public List<Property> getOwnerProperties(String ownerUuid) {
         return propertyRepository.getAllByOwnerUuid(ownerUuid);
+    }
+
+    @Override
+    public Page<Property> getPropertiesByCityAndCountry(String city, String country, Pageable pageable) {
+        if (city == null) {
+            return propertyRepository.getAllByLocationCountry(country, pageable);
+        } else {
+            return propertyRepository.getAllByLocationCityAndLocationCountry(city, country, pageable);
+        }
     }
 }

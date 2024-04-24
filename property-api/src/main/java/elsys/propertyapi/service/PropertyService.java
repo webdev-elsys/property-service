@@ -3,6 +3,8 @@ package elsys.propertyapi.service;
 import elsys.propertyapi.dto.AddPropertyRequest;
 import elsys.propertyapi.entity.Property;
 import elsys.propertyapi.entity.Room;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,4 +17,5 @@ public interface PropertyService {
     List<Room> getAvailableRooms(String propertyUuid, LocalDate checkInDate, LocalDate checkOutDate, int numberOfGuests);
     Float getRoomPrice(String propertyUuid, String roomUuid);
     List<Property> getOwnerProperties(String ownerUuid);
+    Page<Property> getPropertiesByCityAndCountry(String city, String country, Pageable pageable);
 }
