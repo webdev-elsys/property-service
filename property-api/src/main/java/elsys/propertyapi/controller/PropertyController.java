@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutionException;
 public class PropertyController {
     private final PropertyService propertyService;
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Property> addProperty(
         @RequestPart("data") @Valid AddPropertyRequest propertyData,
         @RequestPart("images") MultipartFile[] images
@@ -54,8 +54,8 @@ public class PropertyController {
         return ResponseEntity.ok(propertyService.getRoomPrice(propertyUuid, roomUuid));
     }
 
-    @GetMapping("/owner")
-    public ResponseEntity<List<Property>> getOwnerProperties(@RequestParam("ownerUuid") @UUID String ownerUuid) {
+    @GetMapping("/owner/{ownerUuid}")
+    public ResponseEntity<List<Property>> getOwnerProperties(@PathVariable @UUID String ownerUuid) {
         return ResponseEntity.ok(propertyService.getOwnerProperties(ownerUuid));
     }
 
@@ -69,6 +69,11 @@ public class PropertyController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Property> properties = propertyService.getPropertiesByCityAndCountry(city, country, pageable);
         return ResponseEntity.ok(properties);
+    }
+
+    @GetMapping("/{propertyUuid}/ownerUuid")
+    public ResponseEntity<String> getOwnerUuid(@PathVariable @UUID String propertyUuid) {
+        return ResponseEntity.ok(propertyService.getOwnerUuid(propertyUuid));
     }
 
     // TODO: Implement the following methods:

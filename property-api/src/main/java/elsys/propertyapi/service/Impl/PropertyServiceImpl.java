@@ -94,4 +94,9 @@ public class PropertyServiceImpl implements PropertyService {
             return propertyRepository.getAllByLocationCityAndLocationCountry(city, country, pageable);
         }
     }
+
+    @Override
+    public String getOwnerUuid(String propertyUuid) {
+        return propertyRepository.getByUuid(propertyUuid).getOwnerUuid();
+    }
 }

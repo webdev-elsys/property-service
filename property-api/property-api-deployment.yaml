@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: property-api-deployment
+spec:
+  selector:
+    matchLabels:
+      app: property-api
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: property-api
+    spec:
+      containers:
+        - name: property-api
+          image: property-api:1.0
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: property-db-configmap
+                  key: POSTGRES_HOST
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: property-db-configmap
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  key: POSTGRES_USER
+                  name: property-db-configmap
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: property-db-configmap
+                  key: POSTGRES_PASSWORD

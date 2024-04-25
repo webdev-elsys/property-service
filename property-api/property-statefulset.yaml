@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: property-db-statefulset
+spec:
+  serviceName: property-db-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: property-db
+  template:
+    metadata:
+      labels:
+        app: property-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:10.1
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: property-db-configmap
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: property-pvc

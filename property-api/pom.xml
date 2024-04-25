@@ -75,6 +75,11 @@
 			<artifactId>azure-storage-blob</artifactId>
 			<version>12.25.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.3.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -82,11 +87,19 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version>
+
 				<configuration>
 					<annotationProcessorPaths>
 						<path>
@@ -108,5 +121,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>property-api</finalName>
 	</build>
 </project>

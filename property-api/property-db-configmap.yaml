@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: property-db-configmap
+  labels:
+    app: property-db
+data:
+  POSTGRES_DB: "property_db"
+  POSTGRES_USER: "property_user"
+  POSTGRES_PASSWORD: "property_password"
+  POSTGRES_HOST: "property-db-service"
+  POSTGRES_PORT: "5432"

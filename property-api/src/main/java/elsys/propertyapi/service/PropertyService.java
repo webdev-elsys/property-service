@@ -18,4 +18,5 @@ public interface PropertyService {
     Float getRoomPrice(String propertyUuid, String roomUuid);
     List<Property> getOwnerProperties(String ownerUuid);
     Page<Property> getPropertiesByCityAndCountry(String city, String country, Pageable pageable);
+    String getOwnerUuid(String propertyUuid);
 }
