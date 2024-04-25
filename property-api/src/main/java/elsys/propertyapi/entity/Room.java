@@ -36,4 +36,7 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "property_uuid", referencedColumnName = "uuid")
     private Property property;
+
+    @Column(columnDefinition = "BOOLEAN", nullable = false)
+    private boolean isDeleted = false;
 }

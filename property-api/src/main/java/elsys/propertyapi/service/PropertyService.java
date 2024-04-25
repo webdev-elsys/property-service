@@ -1,6 +1,7 @@
 package elsys.propertyapi.service;
 
 import elsys.propertyapi.dto.AddPropertyRequest;
+import elsys.propertyapi.dto.AddRoomRequest;
 import elsys.propertyapi.entity.Property;
 import elsys.propertyapi.entity.Room;
 import org.springframework.data.domain.Page;
@@ -18,5 +19,10 @@ public interface PropertyService {
     Float getRoomPrice(String propertyUuid, String roomUuid);
     List<Property> getOwnerProperties(String ownerUuid);
     Page<Property> getPropertiesByCityAndCountry(String city, String country, Pageable pageable);
-    String getOwnerUuid(String propertyUuid);
+
+    Property addRoomToProperty(String propertyUuid, AddRoomRequest addRoomRequest);
+    Room updatePropertyRoom(String propertyUuid, String roomUuid, AddRoomRequest addRoomRequest);
+    Property updateProperty(String propertyUuid, AddPropertyRequest addPropertyRequest);
+    void deleteProperty(String propertyUuid);
+    void deleteRoom(String propertyUuid, String roomUuid);
 }
