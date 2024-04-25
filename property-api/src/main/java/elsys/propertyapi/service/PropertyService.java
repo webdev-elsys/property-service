@@ -19,7 +19,7 @@ public interface PropertyService {
     Float getRoomPrice(String propertyUuid, String roomUuid);
     List<Property> getOwnerProperties(String ownerUuid);
     Page<Property> getPropertiesByCityAndCountry(String city, String country, Pageable pageable);
-
+    String getOwnerUuidByPropertyUuid(String propertyUuid);
     Property addRoomToProperty(String propertyUuid, AddRoomRequest addRoomRequest);
     Room updatePropertyRoom(String propertyUuid, String roomUuid, AddRoomRequest addRoomRequest);
     Property updateProperty(String propertyUuid, AddPropertyRequest addPropertyRequest);

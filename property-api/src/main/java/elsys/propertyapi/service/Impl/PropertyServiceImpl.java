@@ -97,6 +97,11 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
+    public String getOwnerUuidByPropertyUuid(String propertyUuid) {
+        return propertyRepository.getByUuid(propertyUuid).getOwnerUuid();
+    }
+
+    @Override
     public Property addRoomToProperty(String propertyUuid, AddRoomRequest addRoomRequest) {
         Property property = propertyRepository.findById(propertyUuid).orElseThrow();
 

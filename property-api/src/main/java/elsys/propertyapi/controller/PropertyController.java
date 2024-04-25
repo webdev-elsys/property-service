@@ -73,6 +73,11 @@ public class PropertyController {
         return ResponseEntity.ok(properties);
     }
 
+    @GetMapping("/{propertyUuid}/ownerUuid")
+    public ResponseEntity<String> getOwnerUuidByPropertyUuid(@PathVariable @UUID String propertyUuid) {
+        return ResponseEntity.ok(propertyService.getOwnerUuidByPropertyUuid(propertyUuid));
+    }
+
     // 1. Add room to property
     @PatchMapping("/{propertyUuid}/rooms")
     public ResponseEntity<Property> addRoomToProperty(
